@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# --------------------------------
+#
+# MIT License
+#
+# Copyright (c) 2025 Tomoya Sawada
+#
+# --------------------------------
+
 set -euo pipefail
 
 # --- Colors ---
@@ -10,6 +18,7 @@ C_YELLOW=$'\033[0;33m'
 C_CYAN=$'\033[0;36m'
 
 # --- Default values ---
+VERSION="0.1.0"
 CONTAINER_NAME="ollama"
 VOLUME_NAME="ollama"
 IMAGE_NAME="docker.io/ollama/ollama"
@@ -28,7 +37,7 @@ OLLAMA_NUM_PARALLEL="1"
 usage() {
   # Use printf for better formatting and color handling
   local runtime_name=${CONTAINER_CMD^} # Capitalize first letter
-  printf "${C_BOLD}Ollama Container Manager${C_RESET} (using ${C_GREEN}${runtime_name}${C_RESET})\n"
+  printf "${C_BOLD}Ollama Container Manager${C_RESET} v${VERSION} (using ${C_GREEN}${runtime_name}${C_RESET})\n"
   printf "\nManages the Ollama container lifecycle using ${runtime_name}.\n"
   printf "\n${C_BOLD}${C_YELLOW}USAGE:${C_RESET}\n"
   printf "  ${C_BOLD}%s${C_RESET} <command> [options]\n" "$0"
@@ -48,6 +57,7 @@ usage() {
   printf "\n${C_BOLD}${C_YELLOW}GLOBAL OPTIONS:${C_RESET}\n"
   printf "  ${C_GREEN}%-15s${C_RESET} %s\n" "-h, --help" "Show this help message."
   printf "  ${C_GREEN}%-15s${C_RESET} %s\n" "-v, --verbose" "Enable verbose output."
+  printf "  ${C_GREEN}%-15s${C_RESET} %s\n" "--version" "Show script version."
   printf "  ${C_GREEN}%-15s${C_RESET} %s\n" "--no-color" "Disable color output."
 }
 
@@ -403,6 +413,10 @@ while [[ $# -gt 0 ]]; do
   case "$1" in
     -h|--help)
       usage
+      exit 0
+      ;;
+    --version)
+      printf "ollama.sh version %s\n" "${VERSION}"
       exit 0
       ;;
     -v|--verbose)
