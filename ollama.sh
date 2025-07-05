@@ -388,6 +388,14 @@ cmd_status() {
 
 # --- Script Entrypoint ---
 
+# First, check for our container runtime dependency
+check_dependencies
+
+# Disable colors if stdout is not a TTY (and --no-color wasn't already passed)
+if [[ ! -t 1 ]]; then
+  disable_colors
+fi
+
 # Pre-process arguments for global flags like --verbose or --help.
 # This allows flags to be placed before the command, e.g., `./run_ollama.sh --verbose run`
 new_args=()
@@ -416,14 +424,6 @@ done
 
 # Overwrite the script's positional parameters with the filtered list
 set -- "${new_args[@]}"
-
-# Disable colors if stdout is not a TTY (and --no-color wasn't already passed)
-if [[ ! -t 1 ]]; then
-  disable_colors
-fi
-
-# First, check for our container runtime dependency
-check_dependencies
 
 # --- Main Dispatch ---
 COMMAND="${1:-help}"
